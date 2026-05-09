@@ -258,13 +258,11 @@ static PyObject *string_list_as_tuple(char **str_list)
 			return NULL;
 		}
 
-		/* PyTuple_SetItem() steals the reference to
-		 * py_str, so it's enough to decref the tuple
-		 * pointer afterwards */
+		/* PyTuple_SetItem()  **always** steals the reference to
+		 * py_str, even on failure. */
 		rc = PyTuple_SetItem(tup, i, py_str);
 		if (rc != 0) {
 			/* cleanup */
-			Py_DECREF(py_str);
 			Py_DECREF(tup);
 			PyErr_NoMemory();
 			return NULL;
